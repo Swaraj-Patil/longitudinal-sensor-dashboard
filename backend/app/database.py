@@ -4,7 +4,11 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DB_URL = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or "postgresql+psycopg2://postgres:postgres@db:5432/sensors"
+# Default to local development URL (used with docker-compose)
+DEFAULT_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@db:5432/sensors"
+
+# Get database URL from environment variables with fallback to default
+DB_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
 
 # Using synchronous SQLAlchemy engine for simplicity in this tutorial
 engine = create_engine(DB_URL, pool_pre_ping=True)
