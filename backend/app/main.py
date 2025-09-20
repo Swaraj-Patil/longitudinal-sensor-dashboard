@@ -18,27 +18,14 @@ def on_startup():
         # log full stacktrace for debugging
         logger.exception("DB initialization failed at startup: %s", e)
 
-# Get allowed origins from environment variable or default to local development
-ALLOWED_ORIGINS = os.getenv(
-    "ALLOWED_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,"
-    "https://longitudinal-sensor-dashboard.vercel.app,"
-    "https://longitudinal-sensor.onrender.com"
-).split(",")
-
-# Log the allowed origins for debugging
-logger.info(f"Configured ALLOWED_ORIGINS: {ALLOWED_ORIGINS}")
-
-# Remove any empty strings and whitespace from origins
-ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()]
-
-# CORS middleware configuration
+# CORS middleware configuration with all origins allowed for debugging
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins temporarily
+    allow_credentials=False,  # Must be False when allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # include routers
