@@ -4,11 +4,20 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Default to local development URL (used with docker-compose)
-DEFAULT_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@db:5432/sensors"
+# Get the environment
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
-# Get database URL from environment variables with fallback to default
-DB_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
+# Set database URL based on environment
+if ENVIRONMENT == "development":
+    # Local development with Docker Compose
+    DB_URL = "postgresql+psycopg2://postgres:postgres@db:5432/sensors"
+elif ENVIRONMENT == "production":
+    # Production environment (Railway)
+    DB_URL = os.getenv("DATABASE_URL")
+    if not DB_URL:
+        raise ValueError("DATABASE_URL environment variable is not set in production environment")
+else:
+    raise ValueError(f"Unknown environment: {ENVIRONMENT}")
 
 # Using synchronous SQLAlchemy engine for simplicity in this tutorial
 engine = create_engine(DB_URL, pool_pre_ping=True)
