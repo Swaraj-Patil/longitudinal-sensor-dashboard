@@ -1,3 +1,4 @@
 frontend/node_modules
+frontend/build
 backend/.venv
 backend/app/__pycache__
