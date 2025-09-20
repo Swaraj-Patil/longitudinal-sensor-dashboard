@@ -1,6 +1,7 @@
 # assemble the app and include routers
 
 import os
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
@@ -8,11 +9,16 @@ from . import models
 from .routers import upload, participants, timeseries, summaries
 
 app = FastAPI(title="Longitudinal Sensor ETL API")
+logger = logging.getLogger("uvicorn.error")
 
 # Create DB tables at startup (dev convenience). In production, use Alembic migrations.
 @app.on_event("startup")
 def on_startup():
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        # log full stacktrace for debugging
+        logger.exception("DB initialization failed at startup: %s", e)
 
 # Get allowed origins from environment variable or default to local development
 ALLOWED_ORIGINS = os.getenv(
