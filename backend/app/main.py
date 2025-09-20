@@ -1,5 +1,3 @@
-# assemble the app and include routers
-
 import os
 import logging
 from fastapi import FastAPI
@@ -23,8 +21,11 @@ def on_startup():
 # Get allowed origins from environment variable or default to local development
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173"  # Added Vite's default port
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,https://longitudinal-sensor-dashboard.vercel.app"
 ).split(",")
+
+# Log the allowed origins for debugging
+logger.info(f"Configured ALLOWED_ORIGINS: {ALLOWED_ORIGINS}")
 
 # CORS middleware configuration
 app.add_middleware(
