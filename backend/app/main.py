@@ -21,11 +21,16 @@ def on_startup():
 # Get allowed origins from environment variable or default to local development
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,https://longitudinal-sensor-dashboard.vercel.app"
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,"
+    "https://longitudinal-sensor-dashboard.vercel.app,"
+    "https://longitudinal-sensor.onrender.com"
 ).split(",")
 
 # Log the allowed origins for debugging
 logger.info(f"Configured ALLOWED_ORIGINS: {ALLOWED_ORIGINS}")
+
+# Remove any empty strings and whitespace from origins
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()]
 
 # CORS middleware configuration
 app.add_middleware(
