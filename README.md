@@ -67,7 +67,7 @@ Longitudinal Sensor Dashboard transforms raw passive sensing data (e.g. accelero
 
 1. Clone the repository:
     ```bash
-    git clone <your-repo-url>
+    git clone https://github.com/Swaraj-Patil/longitudinal-sensor-dashboard.git
     cd longitudinal-sensor-dashboard
     ```
 
