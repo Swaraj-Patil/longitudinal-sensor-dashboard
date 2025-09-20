@@ -1,5 +1,6 @@
 # assemble the app and include routers
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
@@ -13,10 +14,16 @@ app = FastAPI(title="Longitudinal Sensor ETL API")
 def on_startup():
     Base.metadata.create_all(bind=engine)
 
-# CORS for local frontend (adjust origins for production)
+# Get allowed origins from environment variable or default to local development
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173"  # Added Vite's default port
+).split(",")
+
+# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
